@@ -2,32 +2,60 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game Club</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        canvas {
+            border: 1px solid black;
+        }
+        #controls {
+            margin-top: 10px;
+        }
+    </style>
+    <!-- Подключение EmulatorJS через CDN -->
+    <script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script>
 </head>
 <body>
     <h1>Добро пожаловать в Game Club!</h1>
-    <p>Нажмите на кнопку ниже, чтобы загрузить и запустить игру:</p>
-    <button id="startButton">Запустить игру</button>
-    <div id="gameContainer"></div>
+    <p>Нажмите на кнопку ниже, чтобы загрузить и запустить игру.</p>
 
-    <script src="data/emulator.min.js"></script>
+    <!-- Контейнер для игры -->
+    <div style="width:100%;height:100%;max-width:512px;">
+        <div id="game"></div>
+    </div>
+
+    <!-- Кнопка для запуска игры -->
+    <div id="controls">
+        <button onclick="loadGame()">Запустить игру</button>
+    </div>
+
     <script>
-        document.getElementById("startButton").addEventListener("click", function () {
-            // Проверяем наличие объекта Emulator
-            if (typeof Emulator === "undefined") {
-                alert("Ошибка загрузки эмулятора. Проверьте путь к файлу.");
-                return;
+        // Функция для загрузки и запуска игры
+        function loadGame() {
+            // Параметры для настройки эмулятора
+            EJS_player = "#game";
+            EJS_core = "nes"; // Ядро для NES игр
+            EJS_gameUrl = "SidePocket.nes"; // Убедитесь, что файл игры SidePocket.nes доступен
+            EJS_pathtodata = "https://cdn.emulatorjs.org/stable/data/";
+            EJS_color = "#0064ff";
+            EJS_startOnLoaded = true;
+
+            // Проверка, что эмулятор успешно загрузился и готов к запуску
+            if (typeof EJS_emulator !== 'undefined' && EJS_emulator.start) {
+                EJS_emulator.start();
+            } else {
+                alert('Ошибка загрузки эмулятора. Проверьте, что подключены все необходимые файлы.');
             }
-            // Инициализация эмулятора
-            const gameContainer = document.getElementById("gameContainer");
-            const emulator = new Emulator(gameContainer, {
-                gameUrl: "SidePocket.nes", // Убедитесь, что путь к игре правильный
-                coreUrl: "data/cores/nestopia.js", // Убедитесь, что путь к ядру эмулятора правильный
-                autostart: true
-            });
-            emulator.start();
-        });
+        }
     </script>
 </body>
 </html>
