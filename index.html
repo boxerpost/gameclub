@@ -21,6 +21,9 @@
             margin-top: 10px;
         }
     </style>
+    <script>
+        window.EJS_pathtodata = "data/"; // Пример установки пути, укажите правильное расположение
+    </script>
     <script src="data/loader.js" defer></script> <!-- defer гарантирует, что скрипт загрузится после HTML -->
 </head>
 <body>
@@ -37,7 +40,8 @@
 
     <script>
         // Настройка пути к данным для эмулятора
-        window.EJS_pathtodata = "data/"; // Убедитесь, что этот путь ведет к папке с данными эмулятора
+        // Путь уже задан выше, можно повторно не объявлять здесь
+        // window.EJS_pathtodata = "data/"; // Необязательно повторять, если путь уже установлен выше
 
         // Настройка и запуск EmulatorJS для запуска игры
         function loadGame() {
