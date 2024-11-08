@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Game Club</title>
-    <script src="https://cdn.jsdelivr.net/gh/bfirsh/jsnes@0.4.6/web/jsnes.min.js"></script> <!-- Подключаем jsNES -->
+    <script src="https://cdn.jsdelivr.net/gh/bfirsh/jsnes@0.4.6/web/jsnes.min.js"></script>
     <style>
         canvas { border: 1px solid black; }
         #controls { margin-top: 10px; }
@@ -13,15 +13,14 @@
     <h1>Добро пожаловать в Game Club!</h1>
     <p>Нажмите на кнопку ниже, чтобы загрузить и запустить игру.</p>
 
-    <canvas id="screen" width="256" height="240"></canvas> <!-- Элемент canvas для отображения игры -->
+    <canvas id="screen" width="256" height="240"></canvas>
     <div id="controls">
         <button onclick="loadGame()">Запустить игру</button>
     </div>
 
     <script>
-        const romUrl = 'Side Pocket (E).nes'; // Укажите путь к ROM-файлу игры
+        const romUrl = 'Side Pocket (E).nes'; // Убедитесь, что имя совпадает с файлом в репозитории
 
-        // Инициализация эмулятора
         const nes = new jsnes.NES({
             onFrame: function(frameBuffer) {
                 const canvas = document.getElementById('screen');
@@ -36,20 +35,25 @@
                 ctx.putImageData(imageData, 0, 0);
             },
             onAudioSample: function(left, right) {
-                // Можно настроить аудио, если потребуется
+                // Здесь можно настроить аудио, если потребуется
             }
         });
 
-        // Функция для загрузки и запуска игры
         function loadGame() {
             fetch(romUrl)
-                .then(response => response.arrayBuffer())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Ошибка загрузки ROM: ' + response.statusText);
+                    }
+                    return response.arrayBuffer();
+                })
                 .then(buffer => {
                     nes.loadROM(new Uint8Array(buffer));
                     nes.start();
                 })
                 .catch(error => {
-                    console.error('Ошибка загрузки ROM:', error);
+                    console.error('Ошибка:', error);
+                    alert('Не удалось загрузить игру. Проверьте путь к файлу ROM.');
                 });
         }
     </script>
