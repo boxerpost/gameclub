@@ -21,7 +21,7 @@
             margin-top: 10px;
         }
     </style>
-    <script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script>
+    <script src="data/loader.js" defer></script> <!-- defer гарантирует, что скрипт загрузится после HTML -->
 </head>
 <body>
     <h1>Добро пожаловать в Game Club!</h1>
@@ -36,20 +36,38 @@
     </div>
 
     <script>
-        // Настройка EmulatorJS для запуска игры
         function loadGame() {
-            EJS_player = "#game";
-            EJS_core = "nes";
-            EJS_gameUrl = "SidePocket.nes"; // Убедитесь, что этот файл загружен в ту же папку
-            EJS_pathtodata = "https://cdn.emulatorjs.org/stable/data/";
-            EJS_color = "#0064ff";
-            EJS_startOnLoaded = true;
+            // Проверяем, загрузился ли эмулятор
+            if (typeof EmulatorJS === 'undefined') {
+                alert('Ошибка загрузки эмулятора. Пожалуйста, убедитесь, что loader.js загружен корректно.');
+                return;
+            }
 
-            // Убедитесь, что эмулятор загрузился перед началом
-            if (typeof EJS_emulator !== 'undefined') {
-                EJS_emulator.start();
-            } else {
-                alert('Ошибка загрузки эмулятора. Проверьте путь к файлу.');
+            try {
+                // Настройка эмулятора для запуска игры
+                const config = {
+                    canvas: "#game",
+                    path: "data/",
+                    gameUrl: "SidePocket.nes",
+                    core: "nes",
+                    startOnLoaded: true,
+                    color: "#0064ff"
+                };
+
+                // Создание и запуск эмулятора
+                EmulatorJS.load(config).then(emulator => {
+                    emulator.start().catch(err => {
+                        console.error('Ошибка при запуске эмулятора:', err);
+                        alert('Ошибка при запуске эмулятора. Проверьте консоль для подробностей.');
+                    });
+                }).catch(err => {
+                    console.error('Ошибка при инициализации эмулятора:', err);
+                    alert('Ошибка при инициализации эмулятора. Проверьте консоль для подробностей.');
+                });
+
+            } catch (error) {
+                console.error('Произошла ошибка при запуске эмулятора:', error);
+                alert('Ошибка при запуске эмулятора. Проверьте консоль для подробностей.');
             }
         }
     </script>
