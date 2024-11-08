@@ -21,7 +21,7 @@
             margin-top: 10px;
         }
     </style>
-    <script src="data/loader.js" defer></script> <!-- Загрузка скрипта с defer -->
+    <script src="data/loader.js" defer></script> <!-- defer гарантирует, что скрипт загрузится после HTML -->
 </head>
 <body>
     <h1>Добро пожаловать в Game Club!</h1>
@@ -56,10 +56,13 @@
 
                 // Создание и запуск эмулятора
                 EmulatorJS.load(config).then(emulator => {
-                    emulator.start();
+                    emulator.start().catch(err => {
+                        console.error('Ошибка при запуске эмулятора:', err);
+                        alert('Ошибка при запуске эмулятора. Проверьте консоль для подробностей.');
+                    });
                 }).catch(err => {
-                    console.error('Ошибка при запуске эмулятора:', err);
-                    alert('Ошибка при запуске эмулятора. Проверьте консоль для подробностей.');
+                    console.error('Ошибка при инициализации эмулятора:', err);
+                    alert('Ошибка при инициализации эмулятора. Проверьте консоль для подробностей.');
                 });
 
             } catch (error) {
