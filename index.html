@@ -37,20 +37,39 @@
     </div>
 
     <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            // Убедитесь, что DOM полностью загружен перед инициализацией игры
+            console.log('DOM fully loaded and parsed');
+        });
+
         // Настройка EmulatorJS для запуска игры
         function loadGame() {
-            EJS_player = "#game";
-            EJS_core = "nes";
-            EJS_gameUrl = "SidePocket.nes"; // Убедитесь, что этот файл загружен в ту же папку или укажите путь
-            EJS_pathtodata = "data/"; // Убедитесь, что путь к папке data верный
-            EJS_color = "#0064ff";
-            EJS_startOnLoaded = true;
+            try {
+                // Инициализация переменных
+                EJS_player = "#game";
+                EJS_core = "nes";
+                EJS_gameUrl = "SidePocket.nes"; // Убедитесь, что этот файл загружен в ту же папку или укажите путь
+                EJS_pathtodata = "data/"; // Убедитесь, что путь к папке data верный
+                EJS_color = "#0064ff";
+                EJS_startOnLoaded = true;
 
-            // Убедитесь, что эмулятор загрузился перед началом
-            if (typeof EJS_emulator !== 'undefined') {
-                EJS_emulator.start();
-            } else {
-                alert('Ошибка загрузки эмулятора. Проверьте путь к файлу.');
+                // Убедитесь, что эмулятор загружен перед началом
+                if (typeof EmulatorJS !== 'undefined') {
+                    let emulator = new EmulatorJS(EJS_player, {
+                        path: EJS_pathtodata,
+                        gameUrl: EJS_gameUrl,
+                        core: EJS_core,
+                        startOnLoaded: EJS_startOnLoaded,
+                        color: EJS_color
+                    });
+
+                    emulator.start();
+                } else {
+                    alert('Ошибка загрузки эмулятора. Проверьте путь к файлу.');
+                }
+            } catch (error) {
+                console.error('Произошла ошибка при запуске эмулятора:', error);
+                alert('Ошибка при запуске эмулятора. Проверьте консоль для подробностей.');
             }
         }
     </script>
