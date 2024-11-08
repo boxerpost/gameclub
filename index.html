@@ -3,9 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <title>Game Club</title>
+    <script src="https://cdn.jsdelivr.net/gh/bfirsh/jsnes@0.4.6/web/jsnes.min.js"></script> <!-- Подключаем jsNES -->
+    <style>
+        canvas { border: 1px solid black; }
+        #controls { margin-top: 10px; }
+    </style>
 </head>
 <body>
     <h1>Добро пожаловать в Game Club!</h1>
-    <p>Это тестовая страница для проверки работы GitHub Pages.</p>
+    <p>Нажмите на кнопку ниже, чтобы загрузить и запустить игру.</p>
+
+    <canvas id="screen" width="256" height="240"></canvas> <!-- Элемент canvas для отображения игры -->
+    <div id="controls">
+        <button onclick="loadGame()">Запустить игру</button>
+    </div>
+
+    <script>
+        const romUrl = 'Side Pocket (E).nes'; // Укажите путь к ROM-файлу игры
+
+        // Инициализация эмулятора
+        const nes = new jsnes.NES({
+            onFrame: function(frameBuffer) {
+                const canvas = document.getElementById('screen');
+                const ctx = canvas.getContext('2d');
+                const imageData = ctx.getImageData(0, 0, 256, 240);
+                for (let i = 0; i < frameBuffer.length; i++) {
+                    imageData.data[i * 4 + 0] = frameBuffer[i] & 0xff;
+                    imageData.data[i * 4 + 1] = (frameBuffer[i] >> 8) & 0xff;
+                    imageData.data[i * 4 + 2] = (frameBuffer[i] >> 16) & 0xff;
+                    imageData.data[i * 4 + 3] = 0xff;
+                }
+                ctx.putImageData(imageData, 0, 0);
+            },
+            onAudioSample: function(left, right) {
+                // Можно настроить аудио, если потребуется
+            }
+        });
+
+        // Функция для загрузки и запуска игры
+        function loadGame() {
+            fetch(romUrl)
+                .then(response => response.arrayBuffer())
+                .then(buffer => {
+                    nes.loadROM(new Uint8Array(buffer));
+                    nes.start();
+                })
+                .catch(error => {
+                    console.error('Ошибка загрузки ROM:', error);
+                });
+        }
+    </script>
 </body>
 </html>
