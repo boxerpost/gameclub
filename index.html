@@ -21,7 +21,8 @@
             margin-top: 10px;
         }
     </style>
-    <script src="./data/loader.js"></script> <!-- Обновленный путь к loader.js -->
+    <!-- Изменение пути к loader.js -->
+    <script src="data/src/loader.js"></script>
 </head>
 <body>
     <h1>Добро пожаловать в Game Club!</h1>
@@ -40,16 +41,16 @@
         function loadGame() {
             EJS_player = "#game";
             EJS_core = "nes";
-            EJS_gameUrl = "./SidePocket.nes"; // Убедитесь, что файл SidePocket.nes находится в корневой папке
-            EJS_pathtodata = "./data/"; // Путь к папке с данными, убедитесь, что все необходимые файлы там присутствуют
+            EJS_gameUrl = "SidePocket.nes"; // Убедитесь, что этот файл загружен в ту же папку или укажите путь
+            EJS_pathtodata = "data/"; // Убедитесь, что путь к папке data верный
             EJS_color = "#0064ff";
             EJS_startOnLoaded = true;
 
-            // Проверка, что эмулятор загружен перед началом
+            // Убедитесь, что эмулятор загрузился перед началом
             if (typeof EJS_emulator !== 'undefined') {
                 EJS_emulator.start();
             } else {
-                alert('Ошибка загрузки эмулятора. Проверьте путь к файлам в папке data.');
+                alert('Ошибка загрузки эмулятора. Проверьте путь к файлу.');
             }
         }
     </script>
