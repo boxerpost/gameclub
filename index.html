@@ -4,57 +4,53 @@
     <meta charset="UTF-8">
     <title>Game Club</title>
     <style>
-        canvas { border: 1px solid black; }
-        #controls { margin-top: 10px; }
+        body, html {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        canvas {
+            border: 1px solid black;
+        }
+        #controls {
+            margin-top: 10px;
+        }
     </style>
-<script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script>
+    <script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script>
 </head>
 <body>
     <h1>Добро пожаловать в Game Club!</h1>
     <p>Нажмите на кнопку ниже, чтобы загрузить и запустить игру.</p>
 
-    <canvas id="screen" width="256" height="240"></canvas>
+    <div style="width:100%;height:100%;max-width:512px;">
+        <div id="game"></div>
+    </div>
+
     <div id="controls">
         <button onclick="loadGame()">Запустить игру</button>
     </div>
 
     <script>
-        const romUrl = 'SidePocket.nes'; // Убедитесь, что имя совпадает с файлом в репозитории
-
-        const nes = new jsnes.NES({
-            onFrame: function(frameBuffer) {
-                const canvas = document.getElementById('screen');
-                const ctx = canvas.getContext('2d');
-                const imageData = ctx.getImageData(0, 0, 256, 240);
-                for (let i = 0; i < frameBuffer.length; i++) {
-                    imageData.data[i * 4 + 0] = frameBuffer[i] & 0xff;
-                    imageData.data[i * 4 + 1] = (frameBuffer[i] >> 8) & 0xff;
-                    imageData.data[i * 4 + 2] = (frameBuffer[i] >> 16) & 0xff;
-                    imageData.data[i * 4 + 3] = 0xff;
-                }
-                ctx.putImageData(imageData, 0, 0);
-            },
-            onAudioSample: function(left, right) {
-                // Здесь можно настроить аудио, если потребуется
-            }
-        });
-
+        // Настройка EmulatorJS для запуска игры
         function loadGame() {
-            fetch(romUrl)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Ошибка загрузки ROM: ' + response.statusText);
-                    }
-                    return response.arrayBuffer();
-                })
-                .then(buffer => {
-                    nes.loadROM(new Uint8Array(buffer));
-                    nes.start();
-                })
-                .catch(error => {
-                    console.error('Ошибка:', error);
-                    alert('Не удалось загрузить игру. Проверьте путь к файлу ROM.');
-                });
+            EJS_player = "#game";
+            EJS_core = "nes";
+            EJS_gameUrl = "SidePocket.nes"; // Убедитесь, что этот файл загружен в ту же папку
+            EJS_pathtodata = "https://cdn.emulatorjs.org/stable/data/";
+            EJS_color = "#0064ff";
+            EJS_startOnLoaded = true;
+
+            // Убедитесь, что эмулятор загрузился перед началом
+            if (typeof EJS_emulator !== 'undefined') {
+                EJS_emulator.start();
+            } else {
+                alert('Ошибка загрузки эмулятора. Проверьте путь к файлу.');
+            }
         }
     </script>
 </body>
